@@ -1,20 +1,36 @@
 <script>
 	import { onMount } from 'svelte';
 	import { fade, scale } from 'svelte/transition';
+	import gsap from 'gsap';
+	import Typed from 'typed.js';
 
 	let days, hours, minutes, seconds;
 	let targetDate = new Date('2024-11-02T00:00:00').getTime();
 
+	let mesage = 'Нажми :)';
+
 	let quotes = [
-		{ text: 'Ты крутая', author: 'Карл Маркс' },
+		{ text: 'Жимеш)', author: 'ты' },
 		{
-			text: 'Делай сегодня то, что другие не хотят, и завтра будешь там, где другие не могут.',
-			author: 'Неизвестен'
+			text: 'Люблю, когда пахнет как мужчина',
+			author: 'ты'
 		},
-		{ text: 'Нет ничего невозможного.', author: 'Аристотель' },
+		{ text: 'бэгремка.', author: 'я)' },
 		{
-			text: 'Жизнь — это 10% того, что с вами происходит, и 90% того, как вы на это реагируете.',
-			author: 'Чарльз Суиндолл'
+			text: 'блин, я проспал пару!!!',
+			author: 'Ну зато выспался (C) Камила'
+		},
+		{
+			text: 'ТЫ ПОЕЛ?',
+			author: '(C) Камила'
+		},
+		{
+			text: 'А?',
+			author: '(C) Камила'
+		},
+		{
+			text: 'менты нам не кенты',
+			author: '(C) Камила'
 		}
 	];
 
@@ -53,11 +69,49 @@
 			clearInterval(quoteInterval);
 		};
 	});
+
+	//
+
+	let showSecretMessage = false;
+	let k = 0;
+
+	// Сообщение для Typed.js
+	let secretMessage =
+		'Ты самая замечательная! Спасибо тебе за твою поддержку, заботу! А еще я хочу сказать, что... [to be continued]';
+
+	function revealMessage() {
+		showSecretMessage = true;
+		k += 1;
+		if (k == 3) {
+			showSecretMessage = false;
+			k = 0;
+		}
+		// Анимация появления текста с помощью Typed.js
+		const options = {
+			strings: [secretMessage],
+			typeSpeed: 40,
+			showCursor: false
+		};
+
+		new Typed('.typed', options);
+
+		// Анимация блока с сообщением с GSAP
+		gsap.from('.secret-message', {
+			opacity: 0,
+			y: 50,
+			duration: 1,
+			ease: 'power3.out'
+		});
+	}
+
+	onMount(() => {
+		gsap.from('.reveal-btn', { opacity: 0, duration: 1, delay: 0.5 });
+	});
 </script>
 
 <main>
 	<section class="hero" transition:fade={{ duration: 1000 }}>
-		<h1>До твоего дня рождения осталось</h1>
+		<h1>Бэгремка, до твоего дня рождения осталось</h1>
 		<div class="countdown">
 			<div class="time-box" transition:scale={{ duration: 500 }}>
 				<span class="number">{days}</span>
@@ -87,26 +141,44 @@
 			<p class="author" transition:fade>- {currentQuote.author}</p>
 		</div>
 	</section>
+	<section class="mt-50">
+		<button class="reveal-btn" on:click={revealMessage}>
+			{mesage}
+		</button>
+
+		<!-- Секретное сообщение с анимацией Typed.js -->
+		{#if showSecretMessage}
+			<div class="secret-message">
+				<p class="typed" />
+				<p>❤️</p>
+			</div>
+		{/if}
+	</section>
 </main>
 
 <style>
+	.mt-50 {
+		margin-top: 50px;
+	}
 	.quote-display {
 		font-family: 'Playfair Display', serif;
 		font-optical-sizing: auto;
 		font-weight: 400;
 		font-style: normal;
 	}
+
 	main {
 		font-family: 'Arial', sans-serif;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		height: 100vh;
 		background: linear-gradient(120deg, #0f0c29, #302b63, #24243e);
+		min-height: 100vh;
 		color: #fff;
 		text-align: center;
 		overflow: hidden;
+		padding: 20px; /* Padding for small screens */
 	}
 
 	h1 {
@@ -170,6 +242,40 @@
 		opacity: 0.8;
 	}
 
+	.reveal-btn {
+		padding: 10px 20px;
+		font-size: 1.2rem;
+		background-color: #193753;
+		color: #fff;
+		border: none;
+		cursor: pointer;
+		border-radius: 5px;
+		margin-top: 20px;
+	}
+
+	.reveal-btn:hover {
+		background-color: #191342;
+	}
+
+	.secret-message {
+		max-width: 650px !important;
+		margin-top: 20px;
+		padding: 20px;
+		background: rgba(255, 255, 255, 0.1);
+		border-radius: 10px;
+		font-size: 1.5rem;
+		color: white;
+	}
+
+	.typed {
+		font-weight: bold;
+		color: #ffffff;
+		font-family: 'Playfair Display', serif;
+		font-optical-sizing: auto;
+		font-weight: 400;
+		font-style: normal;
+	}
+
 	/* Анимация для плавной смены цитат */
 	@keyframes fadeInOut {
 		0% {
@@ -183,6 +289,92 @@
 		}
 		100% {
 			opacity: 0;
+		}
+	}
+
+	/* Адаптивные стили для мобильных устройств */
+	@media (max-width: 768px) {
+		h1 {
+			font-size: 2.5rem;
+		}
+
+		.countdown {
+			flex-direction: column;
+			gap: 15px;
+		}
+
+		.time-box {
+			min-width: 80px;
+			padding: 15px;
+		}
+
+		.number {
+			font-size: 2rem;
+		}
+
+		.label {
+			font-size: 0.8rem;
+		}
+
+		.quote-container {
+			width: 90%;
+		}
+
+		blockquote {
+			font-size: 1.2rem;
+		}
+
+		.secret-message {
+			font-size: 1.2rem;
+			padding: 15px;
+		}
+
+		.reveal-btn {
+			font-size: 1rem;
+			padding: 8px 15px;
+		}
+	}
+
+	/* Дополнительная адаптация для очень маленьких экранов */
+	@media (max-width: 480px) {
+		h1 {
+			font-size: 2rem;
+		}
+
+		.countdown {
+			gap: 10px;
+		}
+
+		.time-box {
+			min-width: 70px;
+			padding: 10px;
+		}
+
+		.number {
+			font-size: 1.8rem;
+		}
+
+		.label {
+			font-size: 0.7rem;
+		}
+
+		.quote-container {
+			width: 100%;
+			padding: 10px;
+		}
+
+		blockquote {
+			font-size: 1rem;
+		}
+
+		.secret-message {
+			font-size: 1rem;
+			padding: 10px;
+		}
+
+		.reveal-btn {
+			font-size: 0.9rem;
+			padding: 7px 12px;
 		}
 	}
 </style>
