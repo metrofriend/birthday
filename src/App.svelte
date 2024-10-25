@@ -3,11 +3,28 @@
 	import { fade, scale } from 'svelte/transition';
 	import gsap from 'gsap';
 	import Typed from 'typed.js';
+	let password = ''; // Переменная для хранения введенного пароля
+	let correctPassword = '021105'; // Задайте правильный пароль
+	$: showSecretMessage = false; // Переменная для отображения секретного сообщения
+	let message = 'Показать';
+
+	function revealMessage() {
+		console.log(typeof password);
+		console.log(password);
+		console.log(typeof correctPassword);
+		if (password == correctPassword) {
+			showSecretMessage = true;
+		} else {
+			showSecretMessage = false;
+			alert('Неправильный пароль!');
+		}
+	}
 
 	let days, hours, minutes, seconds;
 	let targetDate = new Date('2024-11-02T00:00:00').getTime();
 
 	let mesage = 'Нажми :)';
+	let parol = true;
 
 	let quotes = [
 		{ text: 'Жимеш)', author: 'ты' },
@@ -72,37 +89,36 @@
 
 	//
 
-	let showSecretMessage = false;
 	let k = 0;
 
 	// Сообщение для Typed.js
 	let secretMessage =
 		'Ты самая замечательная! Спасибо тебе за твою поддержку, заботу! А еще я хочу сказать, что... [to be continued]';
 
-	function revealMessage() {
-		showSecretMessage = true;
-		k += 1;
-		if (k == 3) {
-			showSecretMessage = false;
-			k = 0;
-		}
-		// Анимация появления текста с помощью Typed.js
-		const options = {
-			strings: [secretMessage],
-			typeSpeed: 40,
-			showCursor: false
-		};
+	// function revealMessage() {
+	// 	showSecretMessage = true;
+	// 	k += 1;
+	// 	if (k == 3) {
+	// 		showSecretMessage = false;
+	// 		k = 0;
+	// 	}
+	// 	// Анимация появления текста с помощью Typed.js
+	// 	const options = {
+	// 		strings: [secretMessage],
+	// 		typeSpeed: 40,
+	// 		showCursor: false
+	// 	};
 
-		new Typed('.typed', options);
+	// 	new Typed('.typed', options);
 
-		// Анимация блока с сообщением с GSAP
-		gsap.from('.secret-message', {
-			opacity: 0,
-			y: 50,
-			duration: 1,
-			ease: 'power3.out'
-		});
-	}
+	// 	// Анимация блока с сообщением с GSAP
+	// 	gsap.from('.secret-message', {
+	// 		opacity: 0,
+	// 		y: 50,
+	// 		duration: 1,
+	// 		ease: 'power3.out'
+	// 	});
+	// }
 
 	onMount(() => {
 		gsap.from('.reveal-btn', { opacity: 0, duration: 1, delay: 0.5 });
@@ -111,7 +127,7 @@
 
 <main>
 	<section class="hero" transition:fade={{ duration: 1000 }}>
-		<h1>Бэгремка, до твоего дня рождения осталось</h1>
+		<h1>Камила, до Вашего дня рождения осталось</h1>
 		<div class="countdown">
 			<div class="time-box" transition:scale={{ duration: 500 }}>
 				<span class="number">{days}</span>
@@ -141,15 +157,20 @@
 			<p class="author" transition:fade>- {currentQuote.author}</p>
 		</div>
 	</section>
+
 	<section class="mt-50">
+		<h2>Введите пароль:</h2>
+		<!-- Поле ввода для пароля -->
+		<input type="password" placeholder="Введите пароль" bind:value={password} />
+		<!-- Кнопка для показа сообщения -->
 		<button class="reveal-btn" on:click={revealMessage}>
-			{mesage}
+			{message}
 		</button>
 
-		<!-- Секретное сообщение с анимацией Typed.js -->
+		<!-- Секретное сообщение будет отображаться только если showSecretMessage true -->
 		{#if showSecretMessage}
 			<div class="secret-message">
-				<p class="typed" />
+				<p class="typed">Секретное сообщение раскрыто!</p>
 				<p>❤️</p>
 			</div>
 		{/if}
@@ -375,6 +396,42 @@
 		.reveal-btn {
 			font-size: 0.9rem;
 			padding: 7px 12px;
+		}
+
+		.inputGroup {
+			display: flex;
+			flex-direction: column;
+			position: relative;
+		}
+
+		.inputGroup input {
+			display: flex;
+			padding: 18px 30px;
+			border: 1px solid #e4e4e9;
+			box-sizing: border-box;
+			border-radius: 6px;
+		}
+
+		.label {
+			font-size: 14px;
+			text-align: left;
+			text-transform: uppercase;
+			padding: 4px 10px;
+			left: 20px;
+			top: -12px;
+			position: absolute;
+			background: #fff;
+			align-items: flex-start;
+			display: flex;
+		}
+
+		.focusedLabel {
+			color: #302b63;
+		}
+
+		.inputGroup input:focus {
+			border: 1px solid #302b63 !important;
+			outline: none;
 		}
 	}
 </style>
