@@ -4,9 +4,10 @@
 	import gsap from 'gsap';
 	import Typed from 'typed.js';
 	let password = ''; // Переменная для хранения введенного пароля
-	let correctPassword = '021105'; // Задайте правильный пароль
+	let correctPassword = '936101'; // Задайте правильный пароль
 	$: showSecretMessage = false; // Переменная для отображения секретного сообщения
 	let message = 'Показать';
+	let error = false;
 
 	function revealMessage() {
 		console.log(typeof password);
@@ -14,9 +15,12 @@
 		console.log(typeof correctPassword);
 		if (password == correctPassword) {
 			showSecretMessage = true;
+			error = false;
+			password = '';
 		} else {
 			showSecretMessage = false;
-			alert('Неправильный пароль!');
+			error = true;
+			password = '';
 		}
 	}
 
@@ -79,7 +83,7 @@
 	onMount(() => {
 		updateCountdown();
 		const countdownInterval = setInterval(updateCountdown, 1000);
-		const quoteInterval = setInterval(updateQuote, 5000); // Каждые 5 секунд обновляем цитату
+		const quoteInterval = setInterval(updateQuote, 7000); // Каждые 7 секунд обновляем цитату
 
 		return () => {
 			clearInterval(countdownInterval);
@@ -95,34 +99,9 @@
 	let secretMessage =
 		'Ты самая замечательная! Спасибо тебе за твою поддержку, заботу! А еще я хочу сказать, что... [to be continued]';
 
-	// function revealMessage() {
-	// 	showSecretMessage = true;
-	// 	k += 1;
-	// 	if (k == 3) {
-	// 		showSecretMessage = false;
-	// 		k = 0;
-	// 	}
-	// 	// Анимация появления текста с помощью Typed.js
-	// 	const options = {
-	// 		strings: [secretMessage],
-	// 		typeSpeed: 40,
-	// 		showCursor: false
-	// 	};
-
-	// 	new Typed('.typed', options);
-
-	// 	// Анимация блока с сообщением с GSAP
-	// 	gsap.from('.secret-message', {
-	// 		opacity: 0,
-	// 		y: 50,
-	// 		duration: 1,
-	// 		ease: 'power3.out'
-	// 	});
-	// }
-
-	onMount(() => {
-		gsap.from('.reveal-btn', { opacity: 0, duration: 1, delay: 0.5 });
-	});
+	let isFocused = false;
+	const onFocus = () => (isFocused = true);
+	const onBlur = () => (isFocused = false);
 </script>
 
 <main>
@@ -159,25 +138,92 @@
 	</section>
 
 	<section class="mt-50">
-		<h2>Введите пароль:</h2>
-		<!-- Поле ввода для пароля -->
-		<input type="password" placeholder="Введите пароль" bind:value={password} />
-		<!-- Кнопка для показа сообщения -->
-		<button class="reveal-btn" on:click={revealMessage}>
-			{message}
-		</button>
-
-		<!-- Секретное сообщение будет отображаться только если showSecretMessage true -->
+		<div class="inputs">
+			<div class="inputGroup">
+				<!-- <label class={isFocused === true ? 'label focusedLabel' : 'label'}>Пароль</label> -->
+				<input
+					type="password"
+					bind:value={password}
+					placeholder="Введи пароль"
+					class="inputLogin"
+					on:focus={onFocus}
+					on:blur={onBlur}
+				/>
+				{#if error}
+					<p class="error">Пароль неверный!</p>
+				{/if}
+			</div>
+			<button class="btn reveal-btn" on:click={revealMessage}>Показать</button>
+		</div>
+	</section>
+	<section class="mt-30">
 		{#if showSecretMessage}
 			<div class="secret-message">
-				<p class="typed">Секретное сообщение раскрыто!</p>
+				<p class="typed">С днем рождения, любимая!!!</p>
 				<p>❤️</p>
+			</div>
+			<div class="video">
+				<script
+					src="https://play.boomstream.com/OV2pfoge/config.jsonp?title=0&color=transparent"
+					async
+				></script>
+				<script
+					src="https://play.boomstream.com/assets/javascripts/biframesdk.js?v=1.0.5"
+					async
+				></script>
+				<span
+					data-boomstream-code="OV2pfoge"
+					data-boomstream-mode="adaptive"
+					data-boomstream-use-fullscreen-mode="0"
+				/>
 			</div>
 		{/if}
 	</section>
+	<!-- <div class="marquee-container">
+		<div class="marquee">
+			<span
+				>До твоего дня рождения осталось всего-то {days} дня! До твоего дня рождения осталось всего-то
+				{days} дня! До твоего дня рождения осталось всего-то {days} дня! До твоего дня рождения осталось
+				всего-то {days} дня! До твоего дня рождения осталось всего-то {days} дня! До твоего дня рождения
+				осталось всего-то {days} дня!
+			</span>
+		</div>
+	</div> -->
 </main>
 
 <style>
+	.marquee-container {
+		overflow: hidden;
+		width: 100%;
+		background-color: rgba(255, 255, 255, 0.2);
+		padding: 10px 0;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+	}
+
+	/* Стиль самой бегущей строки */
+	.marquee {
+		display: inline-block;
+		white-space: nowrap;
+		animation: marquee 10s linear infinite;
+	}
+
+	/* Текст бегущей строки */
+	.marquee span {
+		font-size: 1.5rem;
+		color: #ff69b4;
+	}
+
+	/* Ключевые кадры для анимации */
+	@keyframes marquee {
+		0% {
+			transform: translateX(100%);
+		}
+		100% {
+			transform: translateX(-100%);
+		}
+	}
 	.mt-50 {
 		margin-top: 50px;
 	}
@@ -263,21 +309,6 @@
 		opacity: 0.8;
 	}
 
-	.reveal-btn {
-		padding: 10px 20px;
-		font-size: 1.2rem;
-		background-color: #193753;
-		color: #fff;
-		border: none;
-		cursor: pointer;
-		border-radius: 5px;
-		margin-top: 20px;
-	}
-
-	.reveal-btn:hover {
-		background-color: #191342;
-	}
-
 	.secret-message {
 		max-width: 650px !important;
 		margin-top: 20px;
@@ -349,11 +380,6 @@
 			font-size: 1.2rem;
 			padding: 15px;
 		}
-
-		.reveal-btn {
-			font-size: 1rem;
-			padding: 8px 15px;
-		}
 	}
 
 	/* Дополнительная адаптация для очень маленьких экранов */
@@ -393,11 +419,6 @@
 			padding: 10px;
 		}
 
-		.reveal-btn {
-			font-size: 0.9rem;
-			padding: 7px 12px;
-		}
-
 		.inputGroup {
 			display: flex;
 			flex-direction: column;
@@ -412,19 +433,6 @@
 			border-radius: 6px;
 		}
 
-		.label {
-			font-size: 14px;
-			text-align: left;
-			text-transform: uppercase;
-			padding: 4px 10px;
-			left: 20px;
-			top: -12px;
-			position: absolute;
-			background: #fff;
-			align-items: flex-start;
-			display: flex;
-		}
-
 		.focusedLabel {
 			color: #302b63;
 		}
@@ -433,5 +441,54 @@
 			border: 1px solid #302b63 !important;
 			outline: none;
 		}
+	}
+	.btn {
+		background: var(--text-violet);
+		border-radius: 50px;
+		color: var(--text-white);
+		font-size: 18px;
+		margin-top: 10px;
+		border: none;
+		padding: 19px;
+		width: 100%;
+		line-height: 22px;
+	}
+
+	.btn:hover {
+		background: #5d5fef;
+		transition: 0.6s;
+		cursor: pointer;
+	}
+
+	.inputs {
+		margin-top: 35px;
+	}
+	.inputGroup {
+		display: flex;
+		flex-direction: column;
+		color: var(--text-regular);
+		position: relative;
+	}
+
+	.inputGroup input {
+		display: flex;
+		padding: 18px 30px;
+		border: 1px solid #e4e4e9;
+		box-sizing: border-box;
+		border-radius: 6px;
+	}
+
+	.inputGroup input:focus {
+		border: 1px solid var(--text-violet) !important;
+		outline: none;
+	}
+	.error {
+		color: rgba(255, 61, 22, 0.914);
+		text-align: left;
+	}
+	.video {
+		width: 100%;
+		border-radius: 33px;
+		margin-top: 30px;
 	}
 </style>

@@ -60,3 +60,17 @@ button:not(:disabled):active {
 button:focus {
 	border-color: #666;
 }
+
+
+* {
+  margin: 0;
+  padding: 0;
+  --text-title: #353544;
+  --text-regular: #aaaab4;
+  --text-violet: #a074ff;
+  --text-blue: #5D5FEF;
+  --text-white: #fff;
+  --text-red: #EB5757;
+  --border-regular: #e4e4e9;
+
+}
