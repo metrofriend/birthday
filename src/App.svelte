@@ -6,6 +6,7 @@
 	let password = ''; // Переменная для хранения введенного пароля
 	let correctPassword = '936101'; // Задайте правильный пароль
 	$: showSecretMessage = false; // Переменная для отображения секретного сообщения
+	let parol = true;
 	let message = 'Показать';
 	let error = false;
 
@@ -17,6 +18,7 @@
 			showSecretMessage = true;
 			error = false;
 			password = '';
+			parol = false;
 		} else {
 			showSecretMessage = false;
 			error = true;
@@ -27,36 +29,7 @@
 	let days, hours, minutes, seconds;
 	let targetDate = new Date('2024-11-02T00:00:00').getTime();
 
-	let mesage = 'Нажми :)';
-	let parol = true;
-
-	let quotes = [
-		{ text: 'Жимеш)', author: 'ты' },
-		{
-			text: 'Люблю, когда пахнет как мужчина',
-			author: 'ты'
-		},
-		{ text: 'бэгремка.', author: 'я)' },
-		{
-			text: 'блин, я проспал пару!!!',
-			author: 'Ну зато выспался (C) Камила'
-		},
-		{
-			text: 'ТЫ ПОЕЛ?',
-			author: '(C) Камила'
-		},
-		{
-			text: 'А?',
-			author: '(C) Камила'
-		},
-		{
-			text: 'менты нам не кенты',
-			author: '(C) Камила'
-		}
-	];
-
 	let currentQuoteIndex = 0;
-	let currentQuote = quotes[currentQuoteIndex];
 
 	// Функция для обновления таймера
 	function updateCountdown() {
@@ -70,20 +43,14 @@
 			seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 		} else {
 			days = hours = minutes = seconds = 0;
+			showSecretMessage = true;
 		}
-	}
-
-	// Обновляем цитаты каждые 5 секунд
-	function updateQuote() {
-		currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
-		currentQuote = quotes[currentQuoteIndex];
 	}
 
 	// Используем onMount для установки интервалов
 	onMount(() => {
 		updateCountdown();
 		const countdownInterval = setInterval(updateCountdown, 1000);
-		const quoteInterval = setInterval(updateQuote, 7000); // Каждые 7 секунд обновляем цитату
 
 		return () => {
 			clearInterval(countdownInterval);
@@ -96,17 +63,54 @@
 	let k = 0;
 
 	// Сообщение для Typed.js
-	let secretMessage =
-		'Ты самая замечательная! Спасибо тебе за твою поддержку, заботу! А еще я хочу сказать, что... [to be continued]';
+	let secretMessage = 'Ты самая замечательная! С тобой я чувствую себя счастливым и любимым';
 
 	let isFocused = false;
 	const onFocus = () => (isFocused = true);
 	const onBlur = () => (isFocused = false);
+
+	let progress = 0;
+	let loading = true;
+	let hideLoader = false;
+
+	// Функция для эмуляции загрузки
+	function startLoading() {
+		const interval = setInterval(() => {
+			progress += 1;
+			if (progress >= 100) {
+				clearInterval(interval);
+				// Добавляем небольшую задержку, чтобы дать время пользователю увидеть 100%
+				setTimeout(() => {
+					hideLoader = true; // Устанавливаем флаг для начала плавного исчезновения
+				}, 500); // Задержка перед началом исчезновения
+			}
+		}, 20); // Увеличиваем прогресс каждые 50мс, чтобы прелоадер завершился за 5 секунд
+	}
+
+	onMount(() => {
+		startLoading();
+	});
 </script>
 
+{#if !hideLoader}
+	<!-- Прелоадер -->
+	<div class="preloader" transition:fade={{ duration: 1000 }}>
+		<div class="progress-circle">
+			<span>{progress}%</span>
+		</div>
+		<div class="progress-bar">
+			<div class="progress-fill" style="width: {progress}%" />
+		</div>
+	</div>
+{/if}
+
+<video autoplay muted loop playsinline id="background-video">
+	<source src="https://cdnv.boomstream.com/balancer/JnCtboIZ-tTtVpsdX.mp4" type="video/mp4" />
+	Ваш браузер не поддерживает видео.
+</video>
 <main>
 	<section class="hero" transition:fade={{ duration: 1000 }}>
-		<h1>Камила, до Вашего дня рождения осталось</h1>
+		<h1>Камила, до твоего дня рождения осталось</h1>
 		<div class="countdown">
 			<div class="time-box" transition:scale={{ duration: 500 }}>
 				<span class="number">{days}</span>
@@ -128,48 +132,55 @@
 	</section>
 
 	<!-- Блок цитат -->
-	<section class="quotes">
+	<!-- <section class="quotes">
 		<div class="quote-container quote-display">
 			<blockquote transition:fade>
 				"{currentQuote.text}"
 			</blockquote>
 			<p class="author" transition:fade>- {currentQuote.author}</p>
 		</div>
-	</section>
-
-	<section class="mt-50">
-		<div class="inputs">
-			<div class="inputGroup">
-				<!-- <label class={isFocused === true ? 'label focusedLabel' : 'label'}>Пароль</label> -->
-				<input
-					type="password"
-					bind:value={password}
-					placeholder="Введи пароль"
-					class="inputLogin"
-					on:focus={onFocus}
-					on:blur={onBlur}
-				/>
-				{#if error}
-					<p class="error">Пароль неверный!</p>
-				{/if}
+	</section> -->
+	{#if parol}
+		<section class="mt-50">
+			<div class="inputs">
+				<div class="inputGroup">
+					<!-- <label class={isFocused === true ? 'label focusedLabel' : 'label'}>Пароль</label> -->
+					<input
+						type="password"
+						bind:value={password}
+						placeholder="Введи пароль"
+						class="inputLogin"
+						on:focus={onFocus}
+						on:blur={onBlur}
+					/>
+					{#if error}
+						<p class="error">Пароль неверный!</p>
+					{/if}
+				</div>
+				<button class="btn reveal-btn" on:click={revealMessage}>Показать</button>
 			</div>
-			<button class="btn reveal-btn" on:click={revealMessage}>Показать</button>
-		</div>
-	</section>
-	<section class="mt-30">
+		</section>
+	{/if}
+
+	<section class="mt-30 ww">
 		{#if showSecretMessage}
 			<div class="secret-message">
 				<p class="typed">С днем рождения, любимая!!!</p>
+				<p class="typed">{secretMessage}</p>
 				<p>❤️</p>
 			</div>
 			<div class="video">
 				<script
 					src="https://play.boomstream.com/OV2pfoge/config.jsonp?title=0&color=transparent"
 					async
+					controls
+					autoplay
 				></script>
 				<script
 					src="https://play.boomstream.com/assets/javascripts/biframesdk.js?v=1.0.5"
 					async
+					controls
+					autoplay
 				></script>
 				<span
 					data-boomstream-code="OV2pfoge"
@@ -179,40 +190,17 @@
 			</div>
 		{/if}
 	</section>
-	<!-- <div class="marquee-container">
-		<div class="marquee">
-			<span
-				>До твоего дня рождения осталось всего-то {days} дня! До твоего дня рождения осталось всего-то
-				{days} дня! До твоего дня рождения осталось всего-то {days} дня! До твоего дня рождения осталось
-				всего-то {days} дня! До твоего дня рождения осталось всего-то {days} дня! До твоего дня рождения
-				осталось всего-то {days} дня!
-			</span>
-		</div>
-	</div> -->
 </main>
 
 <style>
-	.marquee-container {
-		overflow: hidden;
-		width: 100%;
-		background-color: rgba(255, 255, 255, 0.2);
-		padding: 10px 0;
+	#background-video {
 		position: fixed;
+		right: 0;
 		bottom: 0;
-		left: 0;
-	}
-
-	/* Стиль самой бегущей строки */
-	.marquee {
-		display: inline-block;
-		white-space: nowrap;
-		animation: marquee 10s linear infinite;
-	}
-
-	/* Текст бегущей строки */
-	.marquee span {
-		font-size: 1.5rem;
-		color: #ff69b4;
+		min-width: 100%;
+		min-height: 100%;
+		z-index: -1;
+		object-fit: cover; /* Обрезка видео по размеру экрана */
 	}
 
 	/* Ключевые кадры для анимации */
@@ -239,8 +227,12 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		position: relative;
+		color: white;
+		text-align: center;
+		padding: 20px;
 		align-items: center;
-		background: linear-gradient(120deg, #0f0c29, #302b63, #24243e);
+		/* background: linear-gradient(120deg, #0f0c29, #302b63, #24243e); */
 		min-height: 100vh;
 		color: #fff;
 		text-align: center;
@@ -249,7 +241,7 @@
 	}
 
 	h1 {
-		font-size: 3rem;
+		font-size: 4rem;
 		margin-bottom: 20px;
 	}
 
@@ -286,8 +278,6 @@
 	}
 
 	/* Стиль блока с цитатами */
-	.quotes {
-	}
 
 	.quote-container {
 		background-color: rgba(68, 96, 255, 0.1);
@@ -316,17 +306,18 @@
 		background: rgba(255, 255, 255, 0.1);
 		border-radius: 10px;
 		font-size: 1.5rem;
+		text-align: center;
+		margin: 0 auto;
 		color: white;
 	}
 
-	.typed {
+	/* .typed {
 		font-weight: bold;
 		color: #ffffff;
-		font-family: 'Playfair Display', serif;
 		font-optical-sizing: auto;
 		font-weight: 400;
 		font-style: normal;
-	}
+	} */
 
 	/* Анимация для плавной смены цитат */
 	@keyframes fadeInOut {
@@ -347,7 +338,7 @@
 	/* Адаптивные стили для мобильных устройств */
 	@media (max-width: 768px) {
 		h1 {
-			font-size: 2.5rem;
+			font-size: 3rem;
 		}
 
 		.countdown {
@@ -369,7 +360,6 @@
 		}
 
 		.quote-container {
-			width: 90%;
 		}
 
 		blockquote {
@@ -385,7 +375,7 @@
 	/* Дополнительная адаптация для очень маленьких экранов */
 	@media (max-width: 480px) {
 		h1 {
-			font-size: 2rem;
+			font-size: 2.5rem;
 		}
 
 		.countdown {
@@ -406,8 +396,6 @@
 		}
 
 		.quote-container {
-			width: 100%;
-			padding: 10px;
 		}
 
 		blockquote {
@@ -441,6 +429,9 @@
 			border: 1px solid #302b63 !important;
 			outline: none;
 		}
+	}
+	.ww {
+		width: 90%;
 	}
 	.btn {
 		background: var(--text-violet);
@@ -490,5 +481,47 @@
 		width: 100%;
 		border-radius: 33px;
 		margin-top: 30px;
+		padding: 6px;
+		background: #fafafa;
+		border-radius: 16px;
+	}
+	/* Стили для прелоадера */
+	.preloader {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: white;
+		color: black;
+		z-index: 1000;
+		opacity: 1;
+		transition: opacity 1s ease;
+	}
+
+	.progress-circle {
+		font-size: 2rem;
+		font-weight: bold;
+		margin-bottom: 20px;
+		color: black;
+	}
+
+	.progress-bar {
+		width: 80%;
+		height: 4px;
+		background-color: #e0e0e0;
+		border-radius: 2px;
+		overflow: hidden;
+	}
+
+	.progress-fill {
+		height: 100%;
+		background-color: black;
+		width: 0;
+		transition: width 0.05s linear;
 	}
 </style>
