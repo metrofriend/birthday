@@ -170,13 +170,36 @@
 				<p>❤️</p>
 			</div>
 			<div class="video">
-				<iframe
+				<!-- <iframe
 					src="https://play.boomstream.com/OV2pfoge"
 					frameborder="0"
-					width="640"
+					max-width="640"
+					width="100%"
 					border-radius="33px"
-					height="360"
+					max-height="360"
 					allow="autoplay; encrypted-media"
+				/> -->
+				<!-- <iframe
+					src="https://play.boomstream.com/OV2pfoge"
+					frameborder="0"
+					max-width="640"
+					width="100%"
+					border-radius="33px"
+					max-height="360"
+					allow="autoplay; encrypted-media"
+				/> -->
+				<script
+					src="https://play.boomstream.com/OV2pfoge/config.jsonp?autostart=1&title=0&start=1"
+					async
+				></script>
+				<script
+					src="https://play.boomstream.com/assets/javascripts/biframesdk.js?v=1.0.5"
+					async
+				></script>
+				<span
+					data-boomstream-code="OV2pfoge"
+					data-boomstream-mode="adaptive"
+					data-boomstream-use-fullscreen-mode="0"
 				/>
 			</div>
 		{/if}
