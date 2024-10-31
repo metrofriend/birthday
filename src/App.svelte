@@ -63,7 +63,7 @@
 	let k = 0;
 
 	// Сообщение для Typed.js
-	let secretMessage = 'Ты самая замечательная! С тобой я чувствую себя счастливым и любимым';
+	let secretMessage = 'Ты самая лучшая!';
 
 	let isFocused = false;
 	const onFocus = () => (isFocused = true);
@@ -170,22 +170,13 @@
 				<p>❤️</p>
 			</div>
 			<div class="video">
-				<script
-					src="https://play.boomstream.com/OV2pfoge/config.jsonp?title=0&color=transparent"
-					async
-					controls
-					autoplay
-				></script>
-				<script
-					src="https://play.boomstream.com/assets/javascripts/biframesdk.js?v=1.0.5"
-					async
-					controls
-					autoplay
-				></script>
-				<span
-					data-boomstream-code="OV2pfoge"
-					data-boomstream-mode="adaptive"
-					data-boomstream-use-fullscreen-mode="0"
+				<iframe
+					src="https://play.boomstream.com/OV2pfoge"
+					frameborder="0"
+					width="640"
+					border-radius="33px"
+					height="360"
+					allow="autoplay; encrypted-media"
 				/>
 			</div>
 		{/if}
@@ -359,9 +350,6 @@
 			font-size: 0.8rem;
 		}
 
-		.quote-container {
-		}
-
 		blockquote {
 			font-size: 1.2rem;
 		}
@@ -478,12 +466,7 @@
 		text-align: left;
 	}
 	.video {
-		width: 100%;
-		border-radius: 33px;
 		margin-top: 30px;
-		padding: 6px;
-		background: #fafafa;
-		border-radius: 16px;
 	}
 	/* Стили для прелоадера */
 	.preloader {
